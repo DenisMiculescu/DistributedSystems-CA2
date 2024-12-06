@@ -1,19 +1,13 @@
 ## Assignment 2 (EDA app) - Distributed Systems.
 
-__Name:__ [your name]
+__Name:__ Denis Miculescu
 
 __YouTube Demo link__ - [The URL of the video demonstration of the app.]
 
-[ Note: The video must include an audio.]
-
 ### Phase 1.
 
-[ List the Lambda functions in this phase's architecture and state their working status - Fully implemented / Partially working / Not implemented. For partially working lambdas, state briefly what is defective in their implementation.]
-
-e.g.
-
 + Confirmation Mailer - Fully implemented.
-+ Rejection Mailer - Partially working. The Lambda is triggered at the correct times, but the emails are not being received.
++ Rejection Mailer - Fully implemented.
 + Log Image -  Fully implemented. 
 
 ### Phase 2 (if relevant).
