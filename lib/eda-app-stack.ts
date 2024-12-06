@@ -15,6 +15,7 @@ export class EDAAppStack extends cdk.Stack {
     super(scope, id, props);
 
     // S3 Bucket creation
+    
     const imagesBucket = new s3.Bucket(this, "images", {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,

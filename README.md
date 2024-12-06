@@ -2,7 +2,7 @@
 
 __Name:__ Denis Miculescu
 
-__YouTube Demo link__ - [The URL of the video demonstration of the app.]
+__YouTube Demo link__ - https://vimeo.com/1036907050/0782168968?ts=0&share=copy
 
 ### Phase 1.
 
