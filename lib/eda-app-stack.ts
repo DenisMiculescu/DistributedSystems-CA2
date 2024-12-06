@@ -30,29 +30,6 @@ export class EDAAppStack extends cdk.Stack {
     });
 
 
-    // Integration infrastructure
-
-    const invalidImageDLQ = new sqs.Queue(this, "invalid-img-dlq", {
-      retentionPeriod: cdk.Duration.minutes(10),
-    })
-
-    const imageProcessQueue = new sqs.Queue(this, "img-created-queue", {
-      receiveMessageWaitTime: cdk.Duration.seconds(10),
-      deadLetterQueue: {
-        queue: invalidImageDLQ,
-        maxReceiveCount: 3,
-      }
-    });
-
-    const newImageTopic = new sns.Topic(this, "NewImageTopic", {
-      displayName: "New Image topic",
-    }); 
-
-    newImageTopic.addSubscription(
-      new subs.SqsSubscription(imageProcessQueue)
-    );
-
-    
     // Lambda functions
 
     const confirmationMailerFn = new lambdanode.NodejsFunction(this, "ConfirmationMailerFn", {
@@ -78,6 +55,53 @@ export class EDAAppStack extends cdk.Stack {
         DYNAMODB_TABLE: imagesTable.tableName,
       },
     });
+
+    const updateTableFn = new lambdanode.NodejsFunction(this, "UpdateTableFn", {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      entry: `${__dirname}/../lambdas/updateTable.ts`,
+      timeout: cdk.Duration.seconds(10),
+      memorySize: 128,
+      environment: {
+        DYNAMODB_TABLE: imagesTable.tableName,
+      },
+    });
+
+
+    // Integration infrastructure
+
+    const invalidImageDLQ = new sqs.Queue(this, "invalid-img-dlq", {
+      retentionPeriod: cdk.Duration.minutes(10),
+    })
+
+    const imageProcessQueue = new sqs.Queue(this, "img-created-queue", {
+      receiveMessageWaitTime: cdk.Duration.seconds(10),
+      deadLetterQueue: {
+        queue: invalidImageDLQ,
+        maxReceiveCount: 3,
+      }
+    });
+
+    const newImageTopic = new sns.Topic(this, "NewImageTopic", {
+      displayName: "New Image topic",
+    }); 
+
+    newImageTopic.addSubscription(
+      new subs.SqsSubscription(imageProcessQueue)
+    );
+
+    const metadataTopic = new sns.Topic(this, "MetadataTopic", {
+      displayName: "Metadata Topic",
+    });
+
+    metadataTopic.addSubscription(
+      new subs.LambdaSubscription(updateTableFn, {
+        filterPolicy: {
+          metadata_type: sns.SubscriptionFilter.stringFilter({
+            allowlist: ["Caption", "Date", "Photographer"],
+          }),
+        },
+      })
+    );
 
 
     // S3 --> SQS
@@ -111,6 +135,7 @@ export class EDAAppStack extends cdk.Stack {
     imagesBucket.grantRead(logImageFn);
 
     imagesTable.grantReadWriteData(logImageFn);
+    imagesTable.grantReadWriteData(updateTableFn);
 
     confirmationMailerFn.addToRolePolicy(
       new iam.PolicyStatement({
@@ -141,6 +166,10 @@ export class EDAAppStack extends cdk.Stack {
     
     new cdk.CfnOutput(this, "bucketName", {
       value: imagesBucket.bucketName,
+    });
+
+    new cdk.CfnOutput(this, "MetadataTopicArn", {
+      value: metadataTopic.topicArn,
     });
     
   }

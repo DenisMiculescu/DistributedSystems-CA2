@@ -10,25 +10,11 @@ __YouTube Demo link__ - [The URL of the video demonstration of the app.]
 + Rejection Mailer - Fully implemented.
 + Log Image -  Fully implemented. 
 
++ Extra: Functionality to add images to table is faulty
+
 ### Phase 2 (if relevant).
 
-[ List the Lambda functions in this phase's architecture and state their working status - Fully implemented / Partially working / Not implemented. For partially working lambdas, state briefly what is defective in their implementation.]
-
-e.g.
-
-+ Confirmation Mailer - Partially working. The lambda is triggered too often. The image metadata messages are not being filtered out as required.
-+ Rejection Mailer - Fully implemented 
-+ Log Image - Fully implemented 
-+ Update Table -  Fully implemented.
-
-### Phase 3 (if relevant).
-
-[ List the Lambda functions in this phase's architecture and state their working status - Fully implemented / Partially working / Not implemented. For partially working lambdas, state briefly what is defective in their implementation.]
-
-e.g.
-
-+ Confirmation Mailer - Not implemented.
-+ Process Image - Fully implemented.
-+ Update Table - Fully implemented.
-+ etc
-+ etc
++ Confirmation Mailer - Fully implemented.
++ Rejection Mailer - Fully implemented.
++ Log Image - Fully implemented.
++ Update Table -  Partially implemented, doesn't seem to be added to the DynamoDB table
